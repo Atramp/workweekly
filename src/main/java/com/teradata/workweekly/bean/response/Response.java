@@ -1,5 +1,11 @@
 package com.teradata.workweekly.bean.response;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,35 +13,45 @@ import java.util.Map;
  * Created by alex on 15/7/22.
  */
 public class Response {
+    public enum RESULT {
+        ERROR(-1),
+        SUCCESS(0),
+        FAIL(1);
+        private int result;
+
+        RESULT(int i) {
+            result = i;
+        }
+    }
+
     protected int result;
     protected String msg;
     protected Object data;
 
-    public Response() {
+    private Response() {
 
     }
 
-    public Response(Map data) {
+    public Response(RESULT result, String msg) {
+        this.result = result.result;
+        this.msg = msg;
+        this.data = new HashMap(0);
+    }
+
+    public Response(RESULT result, String msg, Map data) {
+        this.result = result.result;
+        this.msg = msg;
+        if(data == null)
+            data = new HashMap(0);
         this.data = data;
-    }public Response(List data) {
+    }
+
+    public Response(RESULT result, String msg, List data) {
+        this.result = result.result;
+        this.msg = msg;
+        if(data == null)
+            data = new ArrayList(0);
         this.data = data;
-    }
-
-    public Response(int result, String msg) {
-        this.msg = msg;
-        this.result = result;
-    }
-
-    public Response(int result, String msg, Map data) {
-        this(data);
-        this.msg = msg;
-        this.result = result;
-    }
-
-    public Response(int result, String msg, List data) {
-        this(data);
-        this.msg = msg;
-        this.result = result;
     }
 
     public String getMsg() {
@@ -50,8 +66,8 @@ public class Response {
         return result;
     }
 
-    public void setResult(int result) {
-        this.result = result;
+    public void setResult(RESULT result) {
+        this.result = result.result;
     }
 
     public Object getData() {
@@ -65,4 +81,15 @@ public class Response {
     public void setData(List data) {
         this.data = data;
     }
+
+
+    public void setResult(int result) {
+        this.result = result;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
+    }
+
 }

@@ -5,25 +5,31 @@
     <!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
     <!--service配置-->
-
-
+    <bean id="userService" class="com.teradata.workweekly.service.UserServiceImpl"></bean>
+    <bean id="userWordService" class="com.teradata.workweekly.service.UserWorkServiceImpl"></bean>
+    <bean id="requirementService" class="com.teradata.workweekly.service.RequirementServiceImpl"></bean>
+    <bean id="smsSendService" class="com.teradata.workweekly.service.AxisSMSSendService"></bean>
     <!--dao配置-->
+    <bean id="userDao" class="com.teradata.workweekly.dao.UserDaoImpl"></bean>
+    <bean id="userWorkDao" class="com.teradata.workweekly.dao.UserWorkDaoImpl"></bean>
+    <bean id="requirementDao" class="com.teradata.workweekly.dao.RequirementDaoImp"></bean>
+
 
     <bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
         <property name="driver" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost:3307/workweekly"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/workweekly"/>
         <property name="username" value="root"/>
-        <property name="password" value="123456"/>
-        <property name="poolMaximumActiveConnections" value="1"/>
-        <property name="poolMaximumIdleConnections" value="1"/>
+        <property name="password" value="mbi187"/>
+        <property name="poolMaximumActiveConnections" value="10"/>
+        <property name="poolMaximumIdleConnections" value="5"/>
     </bean>
 
     <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <!-- 自动扫描mapping.xml文件 -->
-        <property name="mapperLocations" value="classpath:mybatis/sqlmaps/*.xml"></property>
-
+        <property name="mapperLocations" value="classpath:mybatis/sqlmaps/*.xml"/>
+        <property name="typeAliasesPackage" value="com.teradata.workweekly.bean.entity"/>
     </bean>
 
     <!-- 配置transactionManager -->

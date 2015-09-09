@@ -14,7 +14,7 @@ public class Configuration {
     }
 
     public static void load() {
-        String path = Configuration.class.getClassLoader().getResource("/config/application.properties").getPath();
+        String path = Configuration.class.getClassLoader().getResource("/application.properties").getPath();
         InputStream is = null;
         try {
             is = new FileInputStream(new File(path));

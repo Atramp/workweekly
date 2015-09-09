@@ -12,20 +12,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SMSSessionManager {
     private static class SMSSession {
-        private String phone;   //用户手机号码
+        private String id;   //用户手机号码
         private String code;     //用户验证码
         private Date expireTime;  //结束时间
 
-        private SMSSession(String phone, String code) {
-            this.phone = phone;
-            this.code = code;
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MILLISECOND, Configuration.getInt("SMS_EXPIRED_TIME", 1200000));
-            this.expireTime = calendar.getTime();
+        private SMSSession(String id, String code) {
+            this(id, code, Configuration.getInt("SMS_EXPIRED_TIME", 1200000));
         }
 
-        private SMSSession(String phone, String code, int milliSecond) {
-            this.phone = phone;
+        private SMSSession(String id, String code, int milliSecond) {
+            this.id = id;
             this.code = code;
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MILLISECOND, milliSecond);
@@ -37,32 +33,20 @@ public class SMSSessionManager {
         }
 
         private boolean isTimeout() {
-            return new Date().compareTo(this.expireTime) == 1;
+            return new Date().compareTo(this.expireTime) == -1;
         }
 
     }
 
     private static final ConcurrentHashMap<String, SMSSession> sessionMap = new ConcurrentHashMap<String, SMSSession>();
 
-    public static boolean validate(String key, String code) {
+    public static boolean verify(String key, String code) {
         SMSSession smsSession = sessionMap.get(key);
         return smsSession != null && code.equals(smsSession.getCode()) && smsSession.isTimeout();
     }
 
     public static void addSession(String phone, String code) {
         sessionMap.put(phone, new SMSSession(phone, code));
-    }
-
-    public static void addSession(String phone, String code, int milliSecond) {
-        sessionMap.put(phone, new SMSSession(phone, code, milliSecond));
-    }
-
-    public static void addSession(String username, String phone, String code) {
-        sessionMap.put(username, new SMSSession(phone, code));
-    }
-
-    public static void addSession(String username, String phone, String code, int milliSecond) {
-        sessionMap.put(username, new SMSSession(phone, code, milliSecond));
     }
 
     public static void removeSession(String key) {

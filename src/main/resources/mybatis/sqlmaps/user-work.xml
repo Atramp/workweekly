@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="UserWork">
-    <select id="selectUserWorkByID" resultType="UserWork">
+    <select id="selectUserWorkByIDStartDateEndDate" resultType="java.util.Map">
         SELECT
-          *
-        FROM
-          USER_WORK
-        WHERE
-          ID = #{ID}
+          UW.ID,
+          UW.USER_ID,
+          UW.REQUIREMENT_ID,
+          R.CATEGORY,
+          R.COLOR,
+          R.TYPE,
+          R.NAME,
+          UW.HOURS,
+          UW.DESCRIPTION,
+          DATE_FORMAT(UW.DATE,'%Y%m%d') AS DATE
+        FROM user_work UW
+          INNER JOIN v_requirement R ON UW.REQUIREMENT_ID = R.ID
+        WHERE UW.USER_ID = #{USER_ID}
+              AND UW.DATE BETWEEN #{START_DATE} AND #{END_DATE}
+        ORDER BY DATE,ID;
     </select>
+    <insert id="addUserWork">
+        INSERT INTO user_work (USER_ID,REQUIREMENT_ID,DATE,DESCRIPTION,HOURS) VALUES(#{USER_ID},#{REQUIREMENT_ID},#{DATE},#{DESCRIPTION},#{HOURS})
+    </insert>
+
+    <update id="updateUserWork">
+        UPDATE
+            user_work
+          SET
+          <if test="REQUIREMENT_ID != null">
+            REQUIREMENT_ID = #{REQUIREMENT_ID},
+          </if>
+            DESCRIPTION = #{DESCRIPTION},
+            HOURS = #{HOURS}
+          WHERE
+            ID = #{ID}
+    </update>
+
+    <delete id="deleteUserWork">
+        DELETE FROM user_work WHERE ID = #{ID}
+    </delete>
 </mapper>

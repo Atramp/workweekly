@@ -9,6 +9,7 @@ public class UserWork {
     private String requirementID;
     private String date;
     private String description;
+    private String hours;
 
     public String getId() {
         return id;
@@ -48,5 +49,13 @@ public class UserWork {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getHours() {
+        return hours;
+    }
+
+    public void setHours(String hours) {
+        this.hours = hours;
     }
 }

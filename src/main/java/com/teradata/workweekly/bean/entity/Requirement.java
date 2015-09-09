@@ -4,26 +4,27 @@ package com.teradata.workweekly.bean.entity;
  * Created by alex on 15/7/22.
  */
 public class Requirement extends Entity {
-    private String catagoryID;
+    private String category;
     private String color;
+    private String type;
     private String source;
     private String department;
     private String sponsor;
     private String yzAgent;
     private String handler;
-    private String initalDate;
+    private String initialDate;
     private String expectedFinishDate;
     private String startDate;
     private String finishDate;
     private String feedback;
     private String description;
 
-    public String getCatagoryID() {
-        return catagoryID;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCatagoryID(String catagoryID) {
-        this.catagoryID = catagoryID;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getColor() {
@@ -74,12 +75,12 @@ public class Requirement extends Entity {
         this.handler = handler;
     }
 
-    public String getInitalDate() {
-        return initalDate;
+    public String getInitialDate() {
+        return initialDate;
     }
 
-    public void setInitalDate(String initalDate) {
-        this.initalDate = initalDate;
+    public void setInitialDate(String initialDate) {
+        this.initialDate = initialDate;
     }
 
     public String getExpectedFinishDate() {
@@ -120,5 +121,13 @@ public class Requirement extends Entity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

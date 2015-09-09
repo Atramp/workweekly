@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Requirement">
+    <resultMap id="RequirementMap" type="com.teradata.workweekly.bean.entity.Requirement">
+        <id column="ID" property="id"></id>
+        <result column="NAME" property="name"></result>
+        <result column="CATEGORY" property="category"></result>
+        <result column="COLOR" property="color"></result>
+        <result column="TYPE" property="type"></result>
+        <result column="SOURCE" property="source"></result>
+        <result column="DEPARTMENT" property="department"></result>
+        <result column="SPONSOR" property="department"></result>
+        <result column="YZ_AGENT" property="sponsor"></result>
+        <result column="HANDLER" property="yzAgent"></result>
+        <result column="FEEDBACK" property="feedback"></result>
+        <result column="INITIAL_DATE" property="initialDate"></result>
+        <result column="EXCEPTED_FINISH_DATE" property="expectedFinishDate"></result>
+        <result column="START_DATE" property="startDate"></result>
+        <result column="FINISH_DATE" property="finishDate"></result>
+        <result column="DESCRIPTION" property="description"></result>
+    </resultMap>
+
+    <select id="selectAll" resultMap="RequirementMap">
+        SELECT
+          ID AS ID,
+          CATEGORY_ID AS CATEGORY_ID,
+          CATEGORY AS CATEGORY,
+          NAME AS NAME,
+          COLOR AS COLOR,
+          TYPE AS TYPE,
+          SOURCE AS SOURCE,
+          DEPARTMENT AS DEPARTMENT,
+          SPONSOR AS SPONSOR,
+          YZ_AGENT AS YZAGENT,
+          HANDLER AS HANDLER,
+          FEEDBACK AS FEEDBACK,
+          INITIAL_DATE AS INITIALDATE,
+          EXCEPTED_FINISH_DATE AS EXPECTEDFINISHDATE,
+          START_DATE AS STARTDATE,
+          FINISH_DATE AS FINISHDATE,
+          DESCRIPTION AS DESCRIPTION
+        FROM v_requirement
+        ORDER BY CATEGORY_ID,ID
+    </select>
+
+    <select id="selectAllCategories" resultType="Map">
+        SELECT ID,NAME,COLOR FROM r_category;
+    </select>
+</mapper>

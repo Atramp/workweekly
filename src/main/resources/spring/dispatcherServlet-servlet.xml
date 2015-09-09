@@ -6,17 +6,22 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
-
+    <!--静态资源不经DispatcherServlet处理-->
+    <!--ViewResolver配置，将为ModelView渲染指定规则-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
         <property name="prefix" value="/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-
-    <context:component-scan base-package="com.teradata.workweekly.controller" />
-
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
-
+    <!--HandlerMapping配置，根据注释映射方法-->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <!--<property name="interceptors">
+            <list>
+                <bean class="com.teradata.workweekly.filter.AuthFilter"/>
+            </list>
+        </property>-->
+    </bean>
+    <!--HandlerAdapter配置，根据配置映射-->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
@@ -24,4 +29,8 @@
             </list>
         </property>
     </bean>
+    <!--Controller扫描路径，可根据注释配置Controller-->
+    <context:component-scan base-package="com.teradata.workweekly.controller"/>
+
+    <bean class="com.teradata.workweekly.controller.Exception.GenericExceptionHandler"/>
 </beans>

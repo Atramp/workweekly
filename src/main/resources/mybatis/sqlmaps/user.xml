@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User" >
+    <select id="selectUserByPhone" resultType="User">
+        SELECT
+          U.ID,
+          U.NAME,
+          U.PHONE_NUMBER,
+          U.SUPERVISOR
+        FROM
+          user U
+        WHERE
+            U.PHONE_NUMBER = #{PHONE}
+        AND U.VALID = '0'
+    </select>
+    <select id="selectUserByID" resultType="User">
+        SELECT
+            U.ID,
+            U.NAME,
+            U.PHONE_NUMBER,
+            U.SUPERVISOR
+        FROM
+          user U
+        WHERE
+            U.ID = #{ID}
+        AND U.VALID = '0'
+    </select>
+</mapper>

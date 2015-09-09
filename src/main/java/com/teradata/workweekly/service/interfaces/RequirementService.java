@@ -2,7 +2,9 @@ package com.teradata.workweekly.service.interfaces;
 
 import com.teradata.workweekly.bean.entity.Requirement;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 15/7/22.
@@ -10,9 +12,13 @@ import java.util.List;
 public interface RequirementService {
     public List<Requirement> getAllRequirement();
 
+    public List<Map> getAllSimple();
+
+    public List<Map> getAllSimpleByUser(String username);
+
     public Requirement getRequirement(String id);
 
-    public List<Requirement> getRequirementsByCatagory(String catagoryID);
+    public List<Requirement> getRequirementsByCategory(String categoryID);
 
     public boolean addRequirement(Requirement requirement);
 
@@ -21,4 +27,7 @@ public interface RequirementService {
     public boolean updateRequirement(Requirement requirement);
 
     public boolean deleteRequirement(String id);
+
+    public List<Map> getAllCategories();
+
 }
