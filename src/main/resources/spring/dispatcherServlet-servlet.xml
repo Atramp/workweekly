@@ -15,11 +15,11 @@
     </bean>
     <!--HandlerMapping配置，根据注释映射方法-->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-        <!--<property name="interceptors">
+        <property name="interceptors">
             <list>
                 <bean class="com.teradata.workweekly.filter.AuthFilter"/>
             </list>
-        </property>-->
+        </property>
     </bean>
     <!--HandlerAdapter配置，根据配置映射-->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">

@@ -18,6 +18,7 @@ public class Requirement extends Entity {
     private String finishDate;
     private String feedback;
     private String description;
+    private String status;
 
     public String getCategory() {
         return category;
@@ -129,5 +130,13 @@ public class Requirement extends Entity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -2,11 +2,15 @@ package com.teradata.workweekly.service.interfaces;
 
 import com.teradata.workweekly.bean.entity.User;
 
+import java.util.List;
+
 /**
  * Created by alex on 15/7/22.
  */
 public interface UserService {
-    public User getUserByID(String username);
+    List<User> getAllUsers();
 
-    public User getUserByPhone(String phone);
+    User getUserByID(String username);
+
+    User getUserByPhone(String phone);
 }

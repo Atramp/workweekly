@@ -11,9 +11,9 @@ import java.util.Map;
 public interface RequirementDao {
     List<Requirement> getAllRequirement();
 
-    List<Requirement> getRequirementListByCatagory(String catagoryID);
+    List<Requirement> getRequirementListByCategory(String categoryID);
 
-    Requirement getRequirementByID(String id);
+    Map getRequirementRawByID(String id);
 
     boolean addRequirement(Requirement requirement);
 
@@ -22,4 +22,15 @@ public interface RequirementDao {
     boolean deleteRequirement(String id);
 
     List<Map> getCategoryColors();
+
+    List<Map> getAllOptions();
+
+    List<Map> getOptionsByField(String type);
+
+    boolean addOption(String type, String name);
+
+    boolean deleteOption(String id);
+
+    boolean deleteOption(String type, String value);
+
 }

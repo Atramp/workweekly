@@ -79,8 +79,7 @@ public class UserWorkDaoImpl extends AbstractCommonDao implements UserWorkDao {
             param.put("REQUIREMENT_ID", userWork.getRequirementID());
             param.put("DESCRIPTION", userWork.getDescription());
             param.put("HOURS", userWork.getHours());
-            System.out.println("============" + userWork.getDescription());
-            return sqlSession.insert("UserWork.updateUserWork", param) == 1;
+            return sqlSession.update("UserWork.updateUserWork", param) == 1;
         }
     }
 
@@ -89,7 +88,7 @@ public class UserWorkDaoImpl extends AbstractCommonDao implements UserWorkDao {
         try (SqlSession sqlSession = openSession()) {
             Param param = new Param();
             param.put("ID", userWorkID);
-            return sqlSession.insert("UserWork.deleteUserWork", param) == 1;
+            return sqlSession.delete("UserWork.deleteUserWork", param) == 1;
         }
     }
 }

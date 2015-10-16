@@ -6,6 +6,8 @@ import com.teradata.workweekly.dao.common.AbstractCommonDao;
 import com.teradata.workweekly.dao.interfaces.UserDao;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.List;
+
 /**
  * Created by alex on 15/7/22.
  */
@@ -27,4 +29,9 @@ public class UserDaoImpl extends AbstractCommonDao implements UserDao {
         }
     }
 
+    public List<User> getAllUsers() {
+        try (SqlSession session = openSession()) {
+            return session.selectOne("User.selectAllUsers");
+        }
+    }
 }

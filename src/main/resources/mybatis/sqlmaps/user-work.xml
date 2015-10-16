@@ -14,9 +14,9 @@
           R.NAME,
           UW.HOURS,
           UW.DESCRIPTION,
-          DATE_FORMAT(UW.DATE,'%Y%m%d') AS DATE
-        FROM user_work UW
-          INNER JOIN v_requirement R ON UW.REQUIREMENT_ID = R.ID
+          DATE_FORMAT(UW.DATE,'%Y%M%D') AS DATE
+        FROM USER_WORK UW
+          INNER JOIN V_REQUIREMENT R ON UW.REQUIREMENT_ID = R.ID
         WHERE UW.USER_ID = #{USER_ID}
               AND UW.DATE BETWEEN #{START_DATE} AND #{END_DATE}
         ORDER BY DATE,ID;
@@ -27,7 +27,7 @@
 
     <update id="updateUserWork">
         UPDATE
-            user_work
+            USER_WORK
           SET
           <if test="REQUIREMENT_ID != null">
             REQUIREMENT_ID = #{REQUIREMENT_ID},
@@ -39,6 +39,6 @@
     </update>
 
     <delete id="deleteUserWork">
-        DELETE FROM user_work WHERE ID = #{ID}
+        DELETE FROM USER_WORK WHERE ID = #{ID}
     </delete>
 </mapper>

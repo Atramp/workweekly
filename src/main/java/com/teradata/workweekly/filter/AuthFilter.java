@@ -14,6 +14,9 @@ public class AuthFilter extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        if(true)
+            return true;
         if (request.getRequestURI().contains("/verifycode"))
             return true;
         User user = (User) request.getSession().getAttribute("USER");

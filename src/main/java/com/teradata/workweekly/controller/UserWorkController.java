@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by alex on 15/7/22.
@@ -26,7 +28,7 @@ public class UserWorkController {
     public Response getUserWorks(String username, String start_date, String end_date) throws Exception {
         try {
             List list = userWorkService.getUserWorks(username, start_date, end_date);
-            return new Response(Response.RESULT.SUCCESS, "成功获取数据", list);
+            return new Response(Response.RESULT.SUCCESS, "获取数据成功", list);
         } catch (Exception e) {
             e.printStackTrace();
             return new Response(Response.RESULT.ERROR, "系统异常");
@@ -38,7 +40,7 @@ public class UserWorkController {
     public Response getUserWorks(String username, String month) throws Exception {
         try {
             List list = userWorkService.getUserWorks(username, month);
-            return new Response(Response.RESULT.SUCCESS, "成功获取数据", list);
+            return new Response(Response.RESULT.SUCCESS, "获取数据成功", list);
         } catch (Exception e) {
             e.printStackTrace();
             return new Response(Response.RESULT.ERROR, "系统异常");
@@ -101,5 +103,4 @@ public class UserWorkController {
             return new Response(Response.RESULT.ERROR, "系统异常");
         }
     }
-
 }

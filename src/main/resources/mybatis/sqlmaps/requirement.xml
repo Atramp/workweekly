@@ -11,41 +11,171 @@
         <result column="TYPE" property="type"></result>
         <result column="SOURCE" property="source"></result>
         <result column="DEPARTMENT" property="department"></result>
-        <result column="SPONSOR" property="department"></result>
-        <result column="YZ_AGENT" property="sponsor"></result>
-        <result column="HANDLER" property="yzAgent"></result>
+        <result column="SPONSOR" property="sponsor"></result>
+        <result column="YZ_AGENT" property="yzAgent"></result>
+        <result column="HANDLER" property="handler"></result>
         <result column="FEEDBACK" property="feedback"></result>
         <result column="INITIAL_DATE" property="initialDate"></result>
         <result column="EXCEPTED_FINISH_DATE" property="expectedFinishDate"></result>
         <result column="START_DATE" property="startDate"></result>
         <result column="FINISH_DATE" property="finishDate"></result>
         <result column="DESCRIPTION" property="description"></result>
+        <result column="STATUS" property="status"></result>
     </resultMap>
 
     <select id="selectAll" resultMap="RequirementMap">
         SELECT
-          ID AS ID,
-          CATEGORY_ID AS CATEGORY_ID,
-          CATEGORY AS CATEGORY,
-          NAME AS NAME,
-          COLOR AS COLOR,
-          TYPE AS TYPE,
-          SOURCE AS SOURCE,
-          DEPARTMENT AS DEPARTMENT,
-          SPONSOR AS SPONSOR,
-          YZ_AGENT AS YZAGENT,
-          HANDLER AS HANDLER,
-          FEEDBACK AS FEEDBACK,
-          INITIAL_DATE AS INITIALDATE,
-          EXCEPTED_FINISH_DATE AS EXPECTEDFINISHDATE,
-          START_DATE AS STARTDATE,
-          FINISH_DATE AS FINISHDATE,
-          DESCRIPTION AS DESCRIPTION
-        FROM v_requirement
-        ORDER BY CATEGORY_ID,ID
+          ID,
+          CATEGORY_ID,
+          CATEGORY,
+          NAME,
+          COLOR,
+          TYPE,
+          SOURCE,
+          DEPARTMENT,
+          SPONSOR,
+          YZ_AGENT,
+          HANDLER,
+          FEEDBACK,
+          INITIAL_DATE,
+          EXCEPTED_FINISH_DATE,
+          START_DATE,
+          FINISH_DATE,
+          DESCRIPTION,
+          STATUS
+        FROM V_REQUIREMENT
+        ORDER BY STATUS,CATEGORY_ID,ID
     </select>
-
+    <select id="selectRequireRawById" resultType="java.util.Map">
+        SELECT
+          R.ID                   AS id,
+          R.CATEGORY_ID          AS category,
+          R.NAME                 AS name,
+          V.COLOR                AS color,
+          R.TYPE_ID              AS type,
+          R.SOURCE_ID            AS source,
+          R.DEPARTMENT_ID        AS department,
+          R.SPONSOR              AS sponsor,
+          R.YZ_AGENT             AS yzAgent,
+          R.HANDLER              AS handler,
+          R.FEEDBACK_ID          AS feedback,
+          R.INITIAL_DATE         AS initialDate,
+          R.EXCEPTED_FINISH_DATE AS expectedFinishDate,
+          R.START_DATE           AS startDate,
+          R.FINISH_DATE          AS finishDate,
+          R.DESCRIPTION          AS description,
+          R.STATUS               AS status
+        FROM REQUIREMENT R
+          JOIN V_REQUIREMENT V ON R.ID = V.ID
+          JOIN USER U ON R.HANDLER = U.ID
+        WHERE R.ID = #{ID}
+    </select>
+    <insert id="addRequirement" parameterType="com.teradata.workweekly.bean.entity.Requirement">
+      INSERT INTO REQUIREMENT (
+            CATEGORY_ID,
+            TYPE_ID,
+            NAME,
+            SOURCE_ID,
+            DEPARTMENT_ID,
+            SPONSOR,
+            YZ_AGENT,
+            HANDLER,
+            INITIAL_DATE,
+            EXCEPTED_FINISH_DATE,
+            START_DATE,
+            FINISH_DATE,
+            FEEDBACK_ID,
+            DESCRIPTION
+        )
+        VALUES
+            (
+                #{category},
+                #{type},
+                #{name},
+                #{source},
+                #{department},
+                #{sponsor},
+                #{yzAgent},
+                #{handler},
+                #{initialDate},
+                #{expectedFinishDate},
+                #{startDate},
+                #{finishDate},
+                #{feedback},
+                #{description}
+            )
+    </insert>
+    <update id="updateRequirementByID" parameterType="com.teradata.workweekly.bean.entity.Requirement">
+        UPDATE REQUIREMENT SET ID = ID
+        <if test="category != null">
+            ,CATEGORY_ID = #{category}
+        </if>
+        <if test="type != null">
+            ,TYPE_ID = #{type}
+        </if>
+        <if test="name != null">
+            ,NAME = #{name}
+        </if>
+        <if test="source != null">
+            ,SOURCE_ID = #{source}
+        </if>
+        <if test="department != null">
+            ,DEPARTMENT_ID = #{department}
+        </if>
+        <if test="sponsor != null">
+            ,SPONSOR = #{sponsor}
+        </if>
+        <if test="yzAgent != null">
+            ,YZ_AGENT = #{yzAgent}
+        </if>
+        <if test="handler != null">
+            ,HANDLER = #{handler}
+        </if>
+        <if test="initialDate != null and initialDate != ''">
+            ,INITIAL_DATE = #{initialDate}
+        </if>
+        <if test="expectedFinishDate != null and expectedFinishDate != ''">
+            ,EXCEPTED_FINISH_DATE = #{expectedFinishDate}
+        </if>
+        <if test="startDate != null and startDate != ''">
+            ,START_DATE = #{startDate}
+        </if>
+        <if test="finishDate != null and finishDate != ''">
+            ,FINISH_DATE = #{finishDate}
+        </if>
+        <if test="feedback != null">
+            ,FEEDBACK_ID = #{feedback}
+        </if>
+        <if test="description != null">
+            ,DESCRIPTION = #{description}
+        </if>
+        <if test="status != null">
+            ,STATUS = #{status}
+        </if>
+        WHERE ID = #{id}
+    </update>
+    <delete id="deleteRequirementByID">
+        DELETE FROM REQUIREMENT WHERE ID = #{ID}
+    </delete>
     <select id="selectAllCategories" resultType="Map">
-        SELECT ID,NAME,COLOR FROM r_category;
+        SELECT ID,NAME,RSRV_STR1 AS COLOR FROM R_FIELD_OPTION WHERE TYPE = 'CATEGORY' AND STATUS = 0;
     </select>
+    <select id="selectAllOptions" resultType="Map">
+        SELECT O.type,O.name,O.value FROM R_FIELD_OPTION O WHERE STATUS = '0'
+        UNION
+        SELECT 'handler' as type,U.name,U.id as value from user U where valid ='0'
+    </select>
+    <select id="selectOptionsByField" resultType="Map">
+        SELECT 0.type ,O.name,O.value FROM R_FIELD_OPTION O WHERE TYPE = #{TYPE} AND STATUS = '0'
+    </select>
+    <insert id="insertOption">
+        INSERT INTO R_FIELD_OPTION (TYPE,NAME,VALUE) SELECT TYPE,#{NAME} AS NAME,MAX(VALUE) + 1 AS VALUE FROM R_FIELD_OPTION WHERE TYPE=#{TYPE} GROUP BY TYPE
+    </insert>
+    <update id="updateOptionStatus">
+        UPDATE R_FIELD_OPTION SET STATUS = #{STATUS} WHERE ID = #{ID}
+    </update>
+    <update id="updateOptionStatusByTypeValue">
+        UPDATE R_FIELD_OPTION SET STATUS = #{STATUS} WHERE TYPE = #{TYPE} AND VALUE = #{VALUE}
+    </update>
+
 </mapper>

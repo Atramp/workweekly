@@ -56,6 +56,7 @@ public class UserController {
                 request.getSession().setAttribute("USER", user);
                 Map data = new HashMap();
                 data.put("name", user.getName());
+                data.put("permission", phone.equals("15101004021") ? 2 : phone.equals("15120047973") ? 4 : 1);
                 return new Response(Response.RESULT.SUCCESS, "验证成功", data);
             }
             return new Response(Response.RESULT.FAIL, "验证失败");

@@ -10,24 +10,40 @@ import java.util.Map;
  * Created by alex on 15/7/22.
  */
 public interface RequirementService {
-    public List<Requirement> getAllRequirement();
+    List<Requirement> getAllRequirement();
 
-    public List<Map> getAllSimple();
+    List<Map> getAllSimple();
 
-    public List<Map> getAllSimpleByUser(String username);
+    List<Map> getAllSimpleByUser(String username);
 
-    public Requirement getRequirement(String id);
+    Map getRequirementRaw(String id);
 
-    public List<Requirement> getRequirementsByCategory(String categoryID);
+    List<Requirement> getRequirementsByCategory(String categoryID);
 
-    public boolean addRequirement(Requirement requirement);
+    boolean addRequirement(Requirement requirement);
 
-    public boolean addRequirements(List<Requirement> requirements);
+    boolean addRequirements(List<Requirement> requirements);
 
-    public boolean updateRequirement(Requirement requirement);
+    boolean updateRequirement(Requirement requirement);
 
-    public boolean deleteRequirement(String id);
+    boolean deleteRequirement(String id);
 
-    public List<Map> getAllCategories();
+    List<Map> getAllCategories();
 
+    Map<String, List> getAllOptions();
+
+    List<Map> getOptionsByField(String id);
+
+    /**
+     * 返回新选项的value
+     *
+     * @param type
+     * @param name
+     * @return
+     */
+    String addOption(String type, String name);
+
+    boolean deleteOption(String id);
+
+    boolean deleteOption(String type, String value);
 }
