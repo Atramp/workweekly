@@ -38,10 +38,10 @@ public class Response {
         this.data = new HashMap(0);
     }
 
-    public Response(RESULT result, String msg, Map data) {
+    public Response(RESULT result, String msg, Object data) {
         this.result = result.result;
         this.msg = msg;
-        if(data == null)
+        if (data == null)
             data = new HashMap(0);
         this.data = data;
     }
@@ -49,7 +49,7 @@ public class Response {
     public Response(RESULT result, String msg, List data) {
         this.result = result.result;
         this.msg = msg;
-        if(data == null)
+        if (data == null)
             data = new ArrayList(0);
         this.data = data;
     }
@@ -74,11 +74,15 @@ public class Response {
         return data;
     }
 
-    public void setData(Map data) {
+    public void setData(Object data) {
+        if (data == null)
+            data = new HashMap(0);
         this.data = data;
     }
 
     public void setData(List data) {
+        if (data == null)
+            data = new ArrayList(0);
         this.data = data;
     }
 

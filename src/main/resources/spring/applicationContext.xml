@@ -35,7 +35,7 @@
 
     <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSourceDEV"/>
+        <property name="dataSource" ref="dataSource"/>
         <!-- 自动扫描mapping.xml文件 -->
         <property name="mapperLocations" value="classpath:mybatis/sqlmaps/*.xml"/>
         <property name="typeAliasesPackage" value="com.teradata.workweekly.bean.entity"/>
@@ -43,7 +43,7 @@
 
     <!-- 配置transactionManager -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSourceDEV"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
 </beans>
