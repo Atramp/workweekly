@@ -15,28 +15,28 @@ public class RequirementDaoImp extends AbstractCommonDao implements RequirementD
 
 
     @Override
-    public List<Requirement> getAllRequirement() {
+    public List<Requirement> selectAllRequirement() {
         try (SqlSession session = openSession()) {
             return session.selectList("Requirement.selectAll");
         }
     }
 
     @Override
-    public List<Requirement> getRequirementListByCategory(String categoryID) {
+    public List<Requirement> selectRequirementListByCategory(String categoryID) {
         return null;
     }
 
     @Override
-    public Map getRequirementRawByID(String id) {
+    public Map selectRequirementRawByID(String id) {
         try (SqlSession session = openSession()) {
             return session.selectOne("Requirement.selectRequireRawById", new Param().put("ID", id));
         }
     }
 
     @Override
-    public boolean addRequirement(Requirement requirement) {
+    public boolean selectRequirement(Requirement requirement) {
         try (SqlSession sqlSession = openSession()) {
-            return sqlSession.update("Requirement.addRequirement", requirement) == 1;
+            return sqlSession.update("Requirement.insertRequirement", requirement) == 1;
         }
     }
 
@@ -55,28 +55,28 @@ public class RequirementDaoImp extends AbstractCommonDao implements RequirementD
     }
 
     @Override
-    public List<Map> getCategoryColors() {
+    public List<Map> selectCategoryColors() {
         try (SqlSession sqlSession = openSession()) {
             return sqlSession.selectList("Requirement.selectAllCategories");
         }
     }
 
     @Override
-    public List<Map> getAllOptions() {
+    public List<Map> selectAllOptions() {
         try (SqlSession sqlSession = openSession()) {
             return sqlSession.selectList("Requirement.selectAllOptions");
         }
     }
 
     @Override
-    public List<Map> getOptionsByField(String type) {
+    public List<Map> selectOptionsByField(String type) {
         try (SqlSession sqlSession = openSession()) {
             return sqlSession.selectList("Requirement.selectOptionsByField", new Param().put("TYPE", type));
         }
     }
 
     @Override
-    public boolean addOption(String type, String name) {
+    public boolean insertOption(String type, String name) {
         try (SqlSession sqlSession = openSession()) {
             Param param = new Param();
             param.put("TYPE", type).put("NAME", name);

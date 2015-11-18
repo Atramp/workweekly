@@ -3,7 +3,28 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="UserWork">
-    <select id="selectUserWorkByIDStartDateEndDate" resultType="java.util.Map">
+    <resultMap id="UserWork" type="com.teradata.workweekly.bean.entity.UserWork">
+        <result column="ID" property="id"/>
+        <result column="USER_ID" property="userID"/>
+        <result column="REQUIREMENT_ID" property="requirementID"/>
+        <result column="HOURS" property="hours"/>
+        <result column="DESCRIPTION" property="description"/>
+        <result column="DATE" property="date"/>
+        <result column="STATUS" property="status"/>
+    </resultMap>
+    <select id="selectUserWorkByID" resultType="UserWork">
+        SELECT
+          UW.ID,
+          UW.USER_ID,
+          UW.REQUIREMENT_ID,
+          UW.HOURS,
+          UW.DESCRIPTION,
+          DATE_FORMAT(UW.DATE,'%Y%m%d') AS DATE,
+          UW.STATUS
+        FROM USER_WORK UW
+        WHERE UW.ID = #{ID}
+    </select>
+    <select id="selectUserWorkByUserStartDateEndDate" resultType="java.util.Map">
         SELECT
           UW.ID,
           UW.USER_ID,
@@ -14,31 +35,61 @@
           R.NAME,
           UW.HOURS,
           UW.DESCRIPTION,
-          DATE_FORMAT(UW.DATE,'%Y%M%D') AS DATE
+          DATE_FORMAT(UW.DATE,'%Y%m%d') AS DATE,
+          UW.STATUS
         FROM USER_WORK UW
           INNER JOIN V_REQUIREMENT R ON UW.REQUIREMENT_ID = R.ID
         WHERE UW.USER_ID = #{USER_ID}
               AND UW.DATE BETWEEN #{START_DATE} AND #{END_DATE}
         ORDER BY DATE,ID;
     </select>
-    <insert id="addUserWork">
+    <select id="selectByStartEndDateStatus" resultType="java.util.Map">
+        SELECT
+          UW.ID,
+          UW.USER_ID,
+          UW.REQUIREMENT_ID,
+          R.CATEGORY,
+          R.COLOR,
+          R.TYPE,
+          R.NAME,
+          UW.HOURS,
+          UW.DESCRIPTION,
+          DATE_FORMAT(UW.DATE,'%Y%m%d') AS DATE,
+          UW.STATUS
+        FROM USER_WORK UW
+          INNER JOIN V_REQUIREMENT R ON UW.REQUIREMENT_ID = R.ID
+        WHERE UW.STATUS = #{STATUS}
+              AND UW.DATE BETWEEN #{START_DATE} AND #{END_DATE}
+        ORDER BY DATE,ID;
+    </select>
+    <insert id="insertUserWork">
         INSERT INTO user_work (USER_ID,REQUIREMENT_ID,DATE,DESCRIPTION,HOURS) VALUES(#{USER_ID},#{REQUIREMENT_ID},#{DATE},#{DESCRIPTION},#{HOURS})
     </insert>
 
     <update id="updateUserWork">
         UPDATE
+          USER_WORK
+        SET
+        <if test="REQUIREMENT_ID != null">
+            REQUIREMENT_ID = #{REQUIREMENT_ID},
+        </if>
+          DESCRIPTION = #{DESCRIPTION},
+          HOURS = #{HOURS}
+        WHERE
+          ID = #{ID}
+    </update>
+
+    <update id="updateStatusByStartEndDate">
+        UPDATE
             USER_WORK
           SET
-          <if test="REQUIREMENT_ID != null">
-            REQUIREMENT_ID = #{REQUIREMENT_ID},
-          </if>
-            DESCRIPTION = #{DESCRIPTION},
-            HOURS = #{HOURS}
-          WHERE
-            ID = #{ID}
+            STATUS = #{STATUS}
+        WHERE
+          DATE BETWEEN STR_TO_DATE(#{START_DATE},'%Y%m%d') AND  STR_TO_DATE(#{END_DATE},'%Y%m%d')
     </update>
 
     <delete id="deleteUserWork">
         DELETE FROM USER_WORK WHERE ID = #{ID}
     </delete>
+
 </mapper>

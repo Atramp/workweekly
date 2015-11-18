@@ -2,40 +2,80 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="User" >
+<mapper namespace="User">
     <select id="selectAllUsers" resultType="User">
         SELECT
           U.ID,
           U.NAME,
-          U.PHONE_NUMBER,
-          U.SUPERVISOR
+          U.PHONE
         FROM
           USER U
         WHERE
-          U.VALID = '0'
+          U.STATUS = '0'
+    </select>
+    <select id="selectAllUsersWithPermission" resultType="UserPermission">
+        SELECT
+          U.ID,
+          U.NAME,
+          U.PHONE,
+          SUM(UP.PERMISSION_ID) AS PERMISSION
+        FROM
+          USER U
+          LEFT JOIN USER_PERMISSION UP ON U.ID = UP.USER_ID AND UP.STATUS = '0'
+          WHERE U.STATUS = '0'
+        GROUP BY ID, NAME, PHONE
+        ORDER BY U.INDEX
     </select>
     <select id="selectUserByPhone" resultType="User">
         SELECT
           U.ID,
           U.NAME,
-          U.PHONE_NUMBER,
-          U.SUPERVISOR
+          U.PHONE
         FROM
           USER U
         WHERE
-            U.PHONE_NUMBER = #{PHONE}
-        AND U.VALID = '0'
+            U.PHONE = #{PHONE}
+        AND U.STATUS = '0'
     </select>
     <select id="selectUserByID" resultType="User">
         SELECT
             U.ID,
             U.NAME,
-            U.PHONE_NUMBER,
-            U.SUPERVISOR
+            U.PHONE
         FROM
           USER U
         WHERE
             U.ID = #{ID}
-        AND U.VALID = '0'
+        AND U.STATUS = '0'
     </select>
+    <select id="selectUserPermissionByID" resultType="UserPermission">
+        SELECT
+            U.ID,
+            U.NAME,
+            U.PHONE,
+            SUM(UP.PERMISSION_ID) as PERMISSION
+        FROM
+          USER U
+        LEFT JOIN
+          USER_PERMISSION UP ON U.ID = UP.USER_ID AND UP.STATUS = '0'
+        WHERE
+            U.ID = #{ID}
+        AND U.STATUS = '0'
+        GROUP BY ID,NAME,PHONE
+    </select>
+    <insert id="insertUser" parameterType="User">
+        INSERT INTO USER (ID,NAME,PHONE,STATUS) VALUES(#{USER.id}, #{USER.name}, #{USER.phone}, #{USER.status})
+    </insert>
+    <insert id="insertUserPermission" parameterType="UserPermission">
+        INSERT INTO USER_PERMISSION (USER_ID,PERMISSION_ID,START_DATE) VALUES(#{USER_PERMISSION.id}, #{USER_PERMISSION.permission}, NOW())
+    </insert>
+    <update id="updateUser" parameterType="User">
+        UPDATE USER SET NAME = #{USER.name},PHONE=#{USER.phone},STATUS=#{USER.status} WHERE ID = #{USER.id}
+    </update>
+    <update id="updateUserPermission" parameterType="UserPermission">
+        UPDATE USER_PERMISSION SET PERMISSION_ID = #{USER_PERMISSION.permission} WHERE USER_ID = #{USER_PERMISSION.id}
+    </update>
+    <delete id="deleteUserPermission" parameterType="Map">
+        DELETE FROM USER_PERMISSION WHERE USER_ID = #{USER_ID}
+    </delete>
 </mapper>

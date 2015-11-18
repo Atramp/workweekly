@@ -28,10 +28,6 @@ public class Response {
     protected String msg;
     protected Object data;
 
-    private Response() {
-
-    }
-
     public Response(RESULT result, String msg) {
         this.result = result.result;
         this.msg = msg;

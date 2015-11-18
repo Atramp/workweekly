@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Statistics">
+    <select id="selectStatisticsSimplyByStartEndDate" resultType="java.util.Map">
+        SELECT
+          U.ID AS username,
+          U.NAME AS name,
+          COALESCE(SUM(UW.HOURS), 0) AS hour
+        FROM
+          USER U
+    INNER JOIN USER_PERMISSION UP ON UP.USER_ID = U.ID AND UP.PERMISSION_ID = 1
+    LEFT JOIN
+          USER_WORK UW ON U.ID = UW.USER_ID AND UW.DATE BETWEEN STR_TO_DATE(#{START_DATE}, '%Y%m%d') AND STR_TO_DATE(#{END_DATE}, '%Y%m%d')
+        WHERE
+          U.STATUS = '0'
+        GROUP BY username,name
+        ORDER BY hour DESC
+    </select>
+    <select id="selectByStartDate" resultType="java.util.Map">
+        SELECT
+          UW.DATE,
+          CASE WEEKDAY(UW.DATE)
+          WHEN 0
+            THEN '周一'
+          WHEN 1
+            THEN '周二'
+          WHEN 2
+            THEN '周三'
+          WHEN 3
+            THEN '周四'
+          WHEN 4
+            THEN '周五'
+          WHEN 5
+            THEN '周六'
+          WHEN 6
+            THEN '周日'
+          END
+            AS WEEKDAY,
+          R.NAME AS REQUIREMENT,
+          UW.DESCRIPTION,
+          UW.HOURS,
+          U.NAME AS WORKER
+        FROM USER_WORK UW
+          INNER JOIN V_REQUIREMENT R ON UW.REQUIREMENT_ID = R.ID
+          INNER JOIN USER U ON UW.USER_ID = U.ID
+        WHERE UW.DATE BETWEEN STR_TO_DATE(#{START_DATE}, '%Y%m%d') AND STR_TO_DATE(#{END_DATE}, '%Y%m%d')
+        ORDER BY DATE;
+    </select>
+    <select id="selectStatisticsByStartEndDate" resultType="java.util.Map">
+        SELECT
+          V.CATEGORY,
+          V.TYPE,
+          V.NAME,
+          V.SOURCE,
+          V.DEPARTMENT,
+          V.SPONSOR,
+          V.START_DATE,
+          V.EXCEPTED_FINISH_DATE,
+          V.YZ_AGENT,
+          V.START_DATE,
+          V.FINISH_DATE,
+          V.HANDLER,
+          V.FEEDBACK,
+          V.DESCRIPTION,
+          COALESCE(SUM(_UW.HOURS), 0) AS HOURS,
+          GROUP_CONCAT(DISTINCT U.NAME) AS WORKERS
+        FROM (SELECT
+                UW.USER_ID,
+                UW.REQUIREMENT_ID,
+                UW.HOURS,
+                UW.DATE
+              FROM USER_WORK UW
+              WHERE UW.DATE BETWEEN STR_TO_DATE(#{START_DATE}, '%Y%m%d') AND STR_TO_DATE(#{END_DATE}, '%Y%m%d')) _UW
+          INNER JOIN USER U ON _UW.USER_ID = U.ID
+          RIGHT JOIN V_REQUIREMENT V ON _UW.REQUIREMENT_ID = V.ID
+        GROUP BY V.CATEGORY,
+          V.TYPE,
+          V.NAME,
+          V.SOURCE,
+          V.DEPARTMENT,
+          V.SPONSOR,
+          V.START_DATE,
+          V.EXCEPTED_FINISH_DATE,
+          V.YZ_AGENT,
+          V.START_DATE,
+          V.FINISH_DATE,
+          V.HANDLER,
+          V.FEEDBACK,
+          V.DESCRIPTION;
+    </select>
+</mapper>

@@ -1,6 +1,7 @@
 package com.teradata.workweekly.common.config;
 
 import java.io.*;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -14,7 +15,7 @@ public class Configuration {
     }
 
     public static void load() {
-        String path = Configuration.class.getClassLoader().getResource("/application.properties").getPath();
+        String path = Configuration.class.getClassLoader().getResource("application.properties").getPath();
         InputStream is = null;
         try {
             is = new FileInputStream(new File(path));

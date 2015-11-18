@@ -5,9 +5,9 @@ package com.teradata.workweekly.bean.entity;
  */
 public class User extends Entity {
     private String password;
-    private String phone_number;
+    private String phone;
     private String supervisor;
-    private char valid;
+    private char status = '0';
 
     public String getPassword() {
         return password;
@@ -17,12 +17,12 @@ public class User extends Entity {
         this.password = password;
     }
 
-    public String getPhone_number() {
-        return phone_number;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getSupervisor() {
@@ -33,11 +33,11 @@ public class User extends Entity {
         this.supervisor = supervisor;
     }
 
-    public char getValid() {
-        return valid;
+    public char getStatus() {
+        return status;
     }
 
-    public void setValid(char valid) {
-        this.valid = valid;
+    public void setStatus(char status) {
+        this.status = status;
     }
 }

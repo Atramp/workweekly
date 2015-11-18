@@ -1,8 +1,6 @@
 package com.teradata.workweekly.service;
 
 import com.teradata.workweekly.bean.entity.Requirement;
-import com.teradata.workweekly.bean.entity.User;
-import com.teradata.workweekly.bean.response.Response;
 import com.teradata.workweekly.dao.interfaces.RequirementDao;
 import com.teradata.workweekly.service.interfaces.RequirementService;
 import com.teradata.workweekly.service.interfaces.UserService;
@@ -24,12 +22,12 @@ public class RequirementServiceImpl implements RequirementService {
 
     @Override
     public List<Requirement> getAllRequirement() {
-        return requirementDao.getAllRequirement();
+        return requirementDao.selectAllRequirement();
     }
 
     @Override
     public List<Map> getAllSimple() {
-        List<Requirement> requirementList = requirementDao.getAllRequirement();
+        List<Requirement> requirementList = requirementDao.selectAllRequirement();
         MultiValueMap<String, String> categoryMap = MultiValueMap.multiValueMap(new LinkedHashMap());
         for (Requirement requirement : requirementList) {
             Map _requirement = new HashMap();
@@ -57,7 +55,7 @@ public class RequirementServiceImpl implements RequirementService {
 
     @Override
     public Map getRequirementRaw(String id) {
-        return requirementDao.getRequirementRawByID(id);
+        return requirementDao.selectRequirementRawByID(id);
     }
 
     @Override
@@ -67,7 +65,7 @@ public class RequirementServiceImpl implements RequirementService {
 
     @Override
     public boolean addRequirement(Requirement requirement) {
-        return requirementDao.addRequirement(requirement);
+        return requirementDao.selectRequirement(requirement);
     }
 
     @Override
@@ -87,12 +85,12 @@ public class RequirementServiceImpl implements RequirementService {
 
     @Override
     public List<Map> getAllCategories() {
-        return requirementDao.getCategoryColors();
+        return requirementDao.selectCategoryColors();
     }
 
     @Override
     public Map<String, List> getAllOptions() {
-        List<Map> optionList = requirementDao.getAllOptions();
+        List<Map> optionList = requirementDao.selectAllOptions();
         if (optionList != null && !optionList.isEmpty()) {
             MultiValueMap map = MultiValueMap.multiValueMap(new HashMap());
             for (Map temp : optionList) {
@@ -105,13 +103,16 @@ public class RequirementServiceImpl implements RequirementService {
 
     @Override
     public List<Map> getOptionsByField(String id) {
-        return requirementDao.getOptionsByField(id);
+        if("user".equals(id)){
+            return null;
+        }
+        return requirementDao.selectOptionsByField(id);
     }
 
     @Override
     public synchronized String addOption(String type, String name) {
-        if (requirementDao.addOption(type, name)) {
-            List<Map> options = requirementDao.getOptionsByField(type);
+        if (requirementDao.insertOption(type, name)) {
+            List<Map> options = requirementDao.selectOptionsByField(type);
             return MapUtils.getString(options.get(options.size() - 1), "value");
         }
         return "-1";

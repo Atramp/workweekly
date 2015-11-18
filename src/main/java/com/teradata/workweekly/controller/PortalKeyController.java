@@ -1,15 +1,14 @@
 package com.teradata.workweekly.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.teradata.workweekly.bean.response.Response;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by alex on 15/10/16.
@@ -35,7 +34,7 @@ public class PortalKeyController {
         Key key = new Key();
         key.setUser(user);
         key.setCode(code);
-        key.setTime(new SimpleDateFormat("yyy-MM-dd hh:mm:ss").format(new Date()));
+        key.setTime(new Date());
         keys.put(user, key);
         return new Response(Response.RESULT.SUCCESS, "保存口令成功");
     }
@@ -43,13 +42,32 @@ public class PortalKeyController {
     @RequestMapping(value = "/portal-key/get")
     @ResponseBody
     public Response getKey() {
-        return new Response(Response.RESULT.SUCCESS, "获取口令成功", keys);
+        List<Key> keyList = new ArrayList();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, -10);
+        Date indate = calendar.getTime();
+        for (Map.Entry entry : (Set<Map.Entry>) keys.entrySet()) {
+            Key key = (Key) entry.getValue();
+            if (indate.before(key.getTime()))
+                keyList.add(key);
+        }
+        return new Response(Response.RESULT.SUCCESS, "获取口令成功", keyList);
     }
 
     private class Key {
         String user;
         String code;
-        String time;
+        Date time;
+
+        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Shanghai")
+        public Date getTime() {
+            return time;
+        }
+
+        public void setTime(Date time) {
+            this.time = time;
+        }
+
 
         public String getUser() {
             return user;
@@ -67,13 +85,6 @@ public class PortalKeyController {
             this.code = code;
         }
 
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
     }
 
 }

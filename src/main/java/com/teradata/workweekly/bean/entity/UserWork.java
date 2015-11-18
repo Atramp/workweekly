@@ -10,6 +10,7 @@ public class UserWork {
     private String date;
     private String description;
     private String hours;
+    private String status;
 
     public String getId() {
         return id;
@@ -57,5 +58,13 @@ public class UserWork {
 
     public void setHours(String hours) {
         this.hours = hours;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

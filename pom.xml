@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.teradata.workweekly</groupId>
+    <groupId>com.teradata.telco.hq</groupId>
     <artifactId>workweekly</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -31,6 +31,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.bundles</groupId>
@@ -106,6 +111,11 @@
             <groupId>xerces</groupId>
             <artifactId>xerces</artifactId>
             <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.10-FINAL</version>
         </dependency>
     </dependencies>
 

@@ -1,68 +1,73 @@
 package com.teradata.workweekly.controller;
 
 import com.teradata.workweekly.bean.entity.User;
+import com.teradata.workweekly.bean.entity.UserPermission;
 import com.teradata.workweekly.bean.response.Response;
-import com.teradata.workweekly.common.VerifyCodeUtil;
-import com.teradata.workweekly.service.interfaces.SMSSendService;
 import com.teradata.workweekly.service.interfaces.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by alex on 15/7/22.
  */
 @RestController
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private SMSSendService smsSendService;
 
     @ResponseBody
-    @RequestMapping(value = "/verifycode", params = "method=generate")
-    public Response getVerifyCode(String phone) throws Exception {
-        try {
-            if (userService.getUserByPhone(phone) != null) {
-                String code = VerifyCodeUtil.generate(phone);
-                smsSendService.sendVerifyCode(phone, code);
-                Map data = new HashMap();
-                data.put("code", code);
-                return new Response(Response.RESULT.SUCCESS, "获取成功", data);
-            } else {
-                return new Response(Response.RESULT.FAIL, "用户不存在");
-            }
-        } catch (Exception e) {
-            return new Response(Response.RESULT.FAIL, "获取失败");
-        }
+    @RequestMapping(value = "/list")
+    public Response getAllUsers() throws Exception {
+        List users = userService.getAllUsersWithPermission();
+        if (users != null && !users.isEmpty())
+            return new Response(Response.RESULT.SUCCESS, "获取数据成功", users);
+        return new Response(Response.RESULT.FAIL, "获取数据失败");
     }
 
     @ResponseBody
-    @RequestMapping(value = "/verifycode", params = "method=verify")
-    public Response verifyCode(String phone, String code) {
-        try {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-            if (VerifyCodeUtil.verify(phone, code)) {
-                User user = userService.getUserByPhone(phone);
-                request.getSession().setAttribute("USER", user);
-                Map data = new HashMap();
-                data.put("name", user.getName());
-                data.put("permission", phone.equals("15101004021") ? 2 : phone.equals("15120047973") ? 4 : 1);
-                return new Response(Response.RESULT.SUCCESS, "验证成功", data);
-            }
-            return new Response(Response.RESULT.FAIL, "验证失败");
-        } catch (Exception e) {
-            return new Response(Response.RESULT.FAIL, "获取失败");
-        }
+    @RequestMapping(value = "/{id}")
+    public Response getUserByID(@PathVariable String id) throws Exception {
+        User user = userService.getUserByID(id);
+        if (user != null)
+            return new Response(Response.RESULT.SUCCESS, "获取数据成功", user);
+        return new Response(Response.RESULT.FAIL, "获取数据失败");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/permission/{id}")
+    public Response getUserWithPermissionByID(@PathVariable String id) throws Exception {
+        UserPermission user = userService.getUserAndPermissionByPhone(id);
+        if (user != null)
+            return new Response(Response.RESULT.SUCCESS, "获取数据成功", user);
+        return new Response(Response.RESULT.FAIL, "获取数据失败");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/save")
+    public Response saveUser(String id, String name, String phone, String permission) throws Exception {
+        UserPermission userPermission = new UserPermission();
+        userPermission.setId(StringUtils.defaultString(id, phone));
+        userPermission.setName(name);
+        userPermission.setPhone(phone);
+        userPermission.setPermission(permission);
+        if (userService.saveUserWithPermission(userPermission))
+            return new Response(Response.RESULT.SUCCESS, "保存数据成功");
+        return new Response(Response.RESULT.FAIL, "保存数据失败");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/delete/{id}")
+    public Response deleteUser(@PathVariable String id) throws Exception {
+        if (userService.deleteUser(id))
+            return new Response(Response.RESULT.SUCCESS, "删除用户成功");
+        return new Response(Response.RESULT.FAIL, "删除用户失败");
     }
 
 

@@ -14,7 +14,10 @@ public class GenericExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(javax.servlet.http.HttpServletRequest httpServletRequest, javax.servlet.http.HttpServletResponse httpServletResponse, Object o, Exception e) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject(new Response(Response.RESULT.ERROR, e.getMessage()));
+        if ("true".equals(httpServletRequest.getHeader("debug")))
+            modelAndView.addObject(new Response(Response.RESULT.ERROR, e.getMessage()));
+        else
+            modelAndView.addObject(new Response(Response.RESULT.ERROR, "系统异常，请联系管理员"));
         modelAndView.setView(mappingJackson2JsonView);
         return modelAndView;
     }

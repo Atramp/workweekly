@@ -10,14 +10,20 @@ import java.util.Map;
  */
 public interface UserWorkDao {
 
-    List<Map> getUserWorkList(String id, String startDate, String endDate);
+    UserWork selectUserWork(String userID);
 
-    boolean addUserWork(UserWork userWork);
+    List<Map> selectUserWorkList(String userID, String startDate, String endDate);
 
-    boolean addUserWorks(List<UserWork> userWorkList);
+    boolean insertUserWork(UserWork userWork);
+
+    boolean insertUserWorks(List<UserWork> userWorkList);
 
     boolean updateUserWork(UserWork userWork);
 
     boolean deleteUserWork(String userWorkID);
+
+    List<Map> selectByStartEndDateStatus(String startDate, String endDate, int status);
+
+    boolean updateStatusByStartEndDate(String startDate, String endDate, int status);
 
 }

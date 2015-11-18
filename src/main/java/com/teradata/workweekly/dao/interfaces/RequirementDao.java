@@ -9,25 +9,25 @@ import java.util.Map;
  * Created by alex on 15/7/22.
  */
 public interface RequirementDao {
-    List<Requirement> getAllRequirement();
+    List<Requirement> selectAllRequirement();
 
-    List<Requirement> getRequirementListByCategory(String categoryID);
+    List<Requirement> selectRequirementListByCategory(String categoryID);
 
-    Map getRequirementRawByID(String id);
+    Map selectRequirementRawByID(String id);
 
-    boolean addRequirement(Requirement requirement);
+    boolean selectRequirement(Requirement requirement);
 
     boolean updateRequirement(Requirement requirement);
 
     boolean deleteRequirement(String id);
 
-    List<Map> getCategoryColors();
+    List<Map> selectCategoryColors();
 
-    List<Map> getAllOptions();
+    List<Map> selectAllOptions();
 
-    List<Map> getOptionsByField(String type);
+    List<Map> selectOptionsByField(String type);
 
-    boolean addOption(String type, String name);
+    boolean insertOption(String type, String name);
 
     boolean deleteOption(String id);
 

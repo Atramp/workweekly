@@ -1,6 +1,7 @@
 package com.teradata.workweekly.service;
 
 import com.teradata.workweekly.common.config.Configuration;
+import org.apache.axis.ConfigurationException;
 import org.apache.axis.Constants;
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
@@ -11,6 +12,7 @@ import javax.xml.rpc.ServiceException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.security.spec.ECField;
 
 public class AxisSMSSendService implements com.teradata.workweekly.service.interfaces.SMSSendService {
     private static final String PROP_SERVICE_URL = "SMS_SERVICE_URL";
@@ -48,8 +50,8 @@ public class AxisSMSSendService implements com.teradata.workweekly.service.inter
     public void sendSMS(String mobile, String content) {
         try {
             // 调用服务
-            call.invoke(new Object[]{mobile, content});
-        } catch (RemoteException e) {
+            //call.invoke(new Object[]{mobile, content});
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

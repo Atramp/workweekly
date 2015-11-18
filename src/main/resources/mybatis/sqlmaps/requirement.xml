@@ -4,23 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Requirement">
     <resultMap id="RequirementMap" type="com.teradata.workweekly.bean.entity.Requirement">
-        <id column="ID" property="id"></id>
-        <result column="NAME" property="name"></result>
-        <result column="CATEGORY" property="category"></result>
-        <result column="COLOR" property="color"></result>
-        <result column="TYPE" property="type"></result>
-        <result column="SOURCE" property="source"></result>
-        <result column="DEPARTMENT" property="department"></result>
-        <result column="SPONSOR" property="sponsor"></result>
-        <result column="YZ_AGENT" property="yzAgent"></result>
-        <result column="HANDLER" property="handler"></result>
-        <result column="FEEDBACK" property="feedback"></result>
-        <result column="INITIAL_DATE" property="initialDate"></result>
-        <result column="EXCEPTED_FINISH_DATE" property="expectedFinishDate"></result>
-        <result column="START_DATE" property="startDate"></result>
-        <result column="FINISH_DATE" property="finishDate"></result>
-        <result column="DESCRIPTION" property="description"></result>
-        <result column="STATUS" property="status"></result>
+        <id column="ID" property="id"/>
+        <result column="NAME" property="name"/>
+        <result column="CATEGORY" property="category"/>
+        <result column="COLOR" property="color"/>
+        <result column="TYPE" property="type"/>
+        <result column="SOURCE" property="source"/>
+        <result column="DEPARTMENT" property="department"/>
+        <result column="SPONSOR" property="sponsor"/>
+        <result column="YZ_AGENT" property="yzAgent"/>
+        <result column="HANDLER" property="handler"/>
+        <result column="FEEDBACK" property="feedback"/>
+        <result column="INITIAL_DATE" property="initialDate"/>
+        <result column="EXCEPTED_FINISH_DATE" property="expectedFinishDate"/>
+        <result column="START_DATE" property="startDate"/>
+        <result column="FINISH_DATE" property="finishDate"/>
+        <result column="DESCRIPTION" property="description"/>
+        <result column="STATUS" property="status"/>
     </resultMap>
 
     <select id="selectAll" resultMap="RequirementMap">
@@ -70,7 +70,7 @@
           JOIN USER U ON R.HANDLER = U.ID
         WHERE R.ID = #{ID}
     </select>
-    <insert id="addRequirement" parameterType="com.teradata.workweekly.bean.entity.Requirement">
+    <insert id="insertRequirement" parameterType="com.teradata.workweekly.bean.entity.Requirement">
       INSERT INTO REQUIREMENT (
             CATEGORY_ID,
             TYPE_ID,
@@ -163,7 +163,7 @@
     <select id="selectAllOptions" resultType="Map">
         SELECT O.type,O.name,O.value FROM R_FIELD_OPTION O WHERE STATUS = '0'
         UNION
-        SELECT 'handler' as type,U.name,U.id as value from user U where valid ='0'
+        SELECT 'handler' as type,U.name,U.id as value FROM USER U WHERE STATUS ='0'
     </select>
     <select id="selectOptionsByField" resultType="Map">
         SELECT 0.type ,O.name,O.value FROM R_FIELD_OPTION O WHERE TYPE = #{TYPE} AND STATUS = '0'

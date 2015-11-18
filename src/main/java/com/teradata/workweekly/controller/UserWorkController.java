@@ -7,12 +7,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.util.resources.TimeZoneNames_zh_CN;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by alex on 15/7/22.
@@ -51,6 +50,9 @@ public class UserWorkController {
     @ResponseBody
     public Response addUserWork(String username, String require, String desc, String hours, String date) {
         try {
+            List list = userWorkService.getUserWorks(date, date, 2);
+            if(list != null && !list.isEmpty())
+                return new Response(Response.RESULT.FAIL,"当前日期已合并入周报，不能填写");
             String _date[] = date.split(",");
             if (!ArrayUtils.isEmpty(_date)) {
                 List<UserWork> userWorkList = new ArrayList<UserWork>();
@@ -77,7 +79,11 @@ public class UserWorkController {
     @ResponseBody
     public Response updateUserWork(String id, String require, String desc, String hours) {
         try {
-            UserWork userWork = new UserWork();
+            UserWork userWork = userWorkService.getUserWork(id);
+            if (userWork == null)
+                return new Response(Response.RESULT.FAIL, "该记录不存在");
+            if (userWork.getStatus().equals("2"))
+                return new Response(Response.RESULT.FAIL, "该记录已经合并入周报，不能修改");
             userWork.setId(id);
             userWork.setRequirementID(require);
             userWork.setDescription(desc);
@@ -95,6 +101,11 @@ public class UserWorkController {
     @ResponseBody
     public Response deleteUserWork(String id) {
         try {
+            UserWork userWork = userWorkService.getUserWork(id);
+            if (userWork == null)
+                return new Response(Response.RESULT.FAIL, "该记录不存在");
+            if (userWork.getStatus().equals("2"))
+                return new Response(Response.RESULT.FAIL, "该记录已经合并入周报，不能修改");
             if (userWorkService.deleteUserWork(id))
                 return new Response(Response.RESULT.SUCCESS, "删除成功");
             return new Response(Response.RESULT.FAIL, "删除失败");

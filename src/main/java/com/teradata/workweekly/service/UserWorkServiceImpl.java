@@ -19,7 +19,7 @@ public class UserWorkServiceImpl implements UserWorkService {
     private UserWorkDao userWorkDao;
 
     public UserWork getUserWork(String id) {
-        return null;
+        return userWorkDao.selectUserWork(id);
     }
 
     public List<Map> getUserWorks(String userID, String month) {
@@ -35,7 +35,7 @@ public class UserWorkServiceImpl implements UserWorkService {
             Date endDate = calendar.getTime();
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-            List<Map> userWorkList = userWorkDao.getUserWorkList(userID, dateFormat.format(startDate), dateFormat.format(endDate));
+            List<Map> userWorkList = userWorkDao.selectUserWorkList(userID, dateFormat.format(startDate), dateFormat.format(endDate));
             if (userWorkList != null) {
                 MultiValueMap userWorkByDay = MultiValueMap.multiValueMap(new LinkedHashMap<String, Collection<Map>>());
                 for (Map userWork : userWorkList) {
@@ -67,7 +67,7 @@ public class UserWorkServiceImpl implements UserWorkService {
     }
 
     public List<Map> getUserWorks(String userID, String startDate, String endDate) {
-        List<Map> userWorkList = userWorkDao.getUserWorkList(userID, startDate, endDate);
+        List<Map> userWorkList = userWorkDao.selectUserWorkList(userID, startDate, endDate);
         if (userWorkList != null) {
             MultiValueMap<String, Map> userWorkByDay = MultiValueMap.multiValueMap(new LinkedHashMap<String, Collection<Map>>());
             for (Map userWork : userWorkList) {
@@ -110,12 +110,17 @@ public class UserWorkServiceImpl implements UserWorkService {
         return null;
     }
 
+    @Override
+    public List<Map> getUserWorks(String startDate, String endDate, int status) {
+        return userWorkDao.selectByStartEndDateStatus(startDate, endDate, status);
+    }
+
     public boolean addUserWork(UserWork userWork) {
-        return userWorkDao.addUserWork(userWork);
+        return userWorkDao.insertUserWork(userWork);
     }
 
     public boolean addUserWorks(List<UserWork> userWorkList) {
-        return userWorkDao.addUserWorks(userWorkList);
+        return userWorkDao.insertUserWorks(userWorkList);
     }
 
     public boolean updateUserWork(UserWork userWork) {
@@ -126,12 +131,9 @@ public class UserWorkServiceImpl implements UserWorkService {
         return userWorkDao.deleteUserWork(id);
     }
 
-    public static void main(String[] args) {
-        int i = 0;
-        do {
-            i++;
-            System.out.println(i);
-        } while (i < 5);
+    @Override
+    public boolean disableEdit(String startDate, String endDate) {
+        return userWorkDao.updateStatusByStartEndDate(startDate, endDate, 2);
     }
 
 }

@@ -11,18 +11,23 @@ import java.util.Map;
  */
 public interface UserWorkService {
 
-    public UserWork getUserWork(String id);
+    UserWork getUserWork(String id);
 
-    public List<Map> getUserWorks(String userID, String month);
+    List<Map> getUserWorks(String userID, String month);
 
-    public List<Map> getUserWorks(String userID, String startDate, String endDate);
+    List<Map> getUserWorks(String userID, String startDate, String endDate);
 
-    public boolean addUserWork(UserWork userWork);
+    List<Map> getUserWorks(String startDate, String endDate, int status);
 
-    public boolean addUserWorks(List<UserWork> userWorkList);
+    boolean addUserWork(UserWork userWork);
 
-    public boolean updateUserWork(UserWork userWork);
+    boolean addUserWorks(List<UserWork> userWorkList);
 
-    public boolean deleteUserWork(String id);
+    boolean updateUserWork(UserWork userWork);
+
+    boolean deleteUserWork(String id);
+
+    boolean disableEdit(String startDate, String endDate);
+
 
 }
